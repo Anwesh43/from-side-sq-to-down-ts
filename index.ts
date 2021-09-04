@@ -1,5 +1,5 @@
-const w : number = window.innerWidth
-const h : number = window.innerHeight 
+const w : number = window.innerWidth * 0.95
+const h : number = window.innerHeight * 0.95
 const parts : number = 4
 const scGap : number = 0.04 / parts  
 const sizeFactor : number = 5.9  
@@ -20,7 +20,7 @@ class ScaleUtil {
     }
 
     static divideScale(scale : number, i : number, n : number) : number {
-        return Math.min(1 / n, ScaleUtil.maxScale(scale, i, n))
+        return Math.min(1 / n, ScaleUtil.maxScale(scale, i, n)) * n
     }
 }
 
@@ -32,7 +32,7 @@ class DrawingUtil {
         const sc3 : number = ScaleUtil.divideScale(scale, 2, parts)
         const sc4 : number = ScaleUtil.divideScale(scale, 3, parts)
         const size : number = Math.min(w, h) / sizeFactor
-        const x : number = w / 2 - size / 2 * (1 - (sc2 - sc3))
+        const x : number =  size / 2 + (w / 2 - size) * (1 - (sc2 - sc3))
         const y  : number = (h / 2 + size / 2) * (-1 + sc1 + sc4) 
         context.save()
         context.translate(w / 2, h / 2)
