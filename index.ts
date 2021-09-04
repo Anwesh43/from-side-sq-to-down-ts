@@ -46,7 +46,7 @@ class DrawingUtil {
         context.restore()
     }
 
-    static drawDFSSTDNode(context : CanvasRenderingContext2D, i : number, scale : number) {
+    static drawFSSTDNode(context : CanvasRenderingContext2D, i : number, scale : number) {
         context.fillStyle = colors[i]
         DrawingUtil.drawFromSideSquareToDown(context, scale)
     }
@@ -124,5 +124,47 @@ class Animator {
             this.animated = false 
             clearInterval(this.interval)
         }
+    }
+}
+
+class FSSTDNode {
+
+    prev : FSSTDNode 
+    next : FSSTDNode
+    state : State = new State()
+
+    constructor(private i : number) {
+        this.addNeighbor()
+    }
+
+    addNeighbor() {
+        if (this.i < colors.length - 1) {
+            this.next = new FSSTDNode(this.i + 1)
+            this.next.prev = this 
+        }
+    }
+
+    draw(context : CanvasRenderingContext2D) {
+        DrawingUtil.drawFSSTDNode(context, this.i, this.state.scale)
+    }
+
+    update(cb : Function) {
+        this.state.update(cb)
+    }
+
+    startUpdating(cb : Function) {
+        this.state.startUpdating(cb)
+    }
+
+    getNext(dir : number, cb : Function) : FSSTDNode {
+        var curr : FSSTDNode = this.prev 
+        if (dir == 1) {
+            curr = this.next 
+        }
+        if (curr) {
+            return curr 
+        }
+        cb()
+        return this 
     }
 }
